@@ -4,6 +4,8 @@ A collection of Planet OS Jupyter notebooks.
 
 ###Requirements###
 
+#### Python 3
+
 ####[Jupyter Notebook](http://jupyter.org/)####
 
 The Jupyter Notebook is a web application that allows you to create and share documents that contain live code, equations, visualizations and explanatory text.
