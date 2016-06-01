@@ -21,6 +21,7 @@ nbconvert==4.2.0
 nbformat==4.0.1
 notebook==4.2.0
 numpy==1.11.0
+pandas==0.18.1
 pexpect==4.0.1
 pickleshare==0.7.2
 ptyprocess==0.5.1
