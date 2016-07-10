@@ -38,7 +38,7 @@ You can view your API key on the [Planet OS account settings page](http://data.p
 
 Launch Jupyter with the following command:
 
-`jupyter notebook`
+`jupyter notebook` or `ipython3 notebook`
 
 By default, the command above will open a new browser tab at http://127.0.0.1:8888 which lists the available notebooks in a directory view.
 
