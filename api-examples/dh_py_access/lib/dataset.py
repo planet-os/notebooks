@@ -18,7 +18,7 @@ class dataset:
         return variables.r.json()['variables']
 
     def variable_names(self):
-        return list(map(lambda x: x['variableKey'], self.variables()))
+        return sort(list(set(list(map(lambda x: x['variableKey'], self.variables())))))
 
     def standard_names(self):
         """
@@ -37,7 +37,7 @@ class dataset:
                     for i in k[j]:
                         if i['attributeKey']==nameversion:
                             stdnames.append(i['attributeValue'])
-        return stdnames
+        return sort(list(set(stdnames)))
 
     def get_standard_name_from_variable_name(self,varname):
         for i in self.variables():
