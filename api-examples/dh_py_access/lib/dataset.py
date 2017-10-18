@@ -18,7 +18,7 @@ class dataset:
         return variables.r.json()['variables']
 
     def variable_names(self):
-        return sort(list(set(list(map(lambda x: x['variableKey'], self.variables())))))
+        return sorted(list(set(list(map(lambda x: x['variableKey'], self.variables())))))
 
     def standard_names(self):
         """
