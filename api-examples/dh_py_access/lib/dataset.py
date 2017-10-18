@@ -37,7 +37,7 @@ class dataset:
                     for i in k[j]:
                         if i['attributeKey']==nameversion:
                             stdnames.append(i['attributeValue'])
-        return sort(list(set(stdnames)))
+        return sorted(list(set(stdnames)))
 
     def get_standard_name_from_variable_name(self,varname):
         for i in self.variables():
