@@ -5,9 +5,9 @@ import time
 import json
 import zipfile
 
-def generate_links(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable):
+def generate_links(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable,area):
     package_key_nr = time_start + 'to' + time_end; package_key_nr = package_key_nr.replace('-','').replace(':','')
-    package_key = dataset_key + '_' + package_key_nr
+    package_key = dataset_key + '_' + package_key_nr + '_' + area
     put_http = 'https://api.planetos.com/v1/packages?dataset={0}&apikey={1}&polygon=[[{2},{4}],[{3},{4}],[{3},{5}],[{2},{5}],[{2},{4}]]&grouping=location&reftime_recent=true&time_start={6}&time_end={7}&package={8}&var={9}&count=1000'.format(dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,package_key,variable)
     get_status_http = 'https://api.planetos.com/v1/packages/{0}?apikey={1}'.format(package_key,API_key)
     get_data_http = 'https://api.planetos.com/v1/packages/{0}/data?apikey={1}'.format(package_key,API_key)
@@ -68,8 +68,8 @@ def unzip(package_key,folder):
     os.remove(zip_filename)
     os.rename(folder + 'data', folder + package_key + '.nc')
 
-def download_data(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable):
-    package_key, put_http, get_status_http, get_data_http = generate_links(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable)
+def download_data(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable,area):
+    package_key, put_http, get_status_http, get_data_http = generate_links(folder,dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,variable,area)
     if not os.path.exists(folder + '/' + package_key + '.nc'):
         make_package(put_http,get_status_http)
         get_stats = get_package(get_data_http,get_status_http,package_key)
