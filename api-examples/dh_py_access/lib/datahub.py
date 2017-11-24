@@ -4,9 +4,10 @@
 from . datasets import datasets
 
 class datahub:
-    def __init__(self,server,version):
+    def __init__(self,server,version,apikey):
         self.server=server
         self.version=version
+        self.apikey=apikey
 
     def init_datasets(self):
         self.datasets=datasets(self.apikey,server=self.server,version=self.version)

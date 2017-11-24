@@ -9,8 +9,9 @@ class parse_urls:
         """
         host: like api.planetos.com/
         """
-        reqstr="https://{0}/{1}/{2}?apikey={3}".format(host,version,endpoint,apikey)
+        reqstr="http://{0}/{1}/{2}?apikey={3}".format(host,version,endpoint,apikey)
         for i,j in kwargs.items():
             reqstr += "&{0}={1}".format(i,j)
+        #print('reqstr',reqstr)
         self.r = requests.get(reqstr)
         

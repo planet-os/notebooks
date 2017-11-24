@@ -46,7 +46,6 @@ class dataset:
                     if j['attributeKey']=='long_name':
                         return j['attributeValue']
         
-
     def long_names(self):
         """
         return list of long names of variables
