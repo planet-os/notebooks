@@ -5,14 +5,19 @@ import time
 import json
 import zipfile
 from .lib.parse_urls import parse_urls
+import datetime
 
 class package_api:
-    def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,area_name="",folder='./'):
+    def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start=None,time_end=None,area_name="",folder='./'):
         self.dh = dh
         self.dataset = dataset
         self.variable_name = variable_name
         self.coordinates = (longitude_west,longitude_east,latitude_south,latitude_north)
-        self.temporal_extent = (time_start,time_end)
+        if time_start == None or time_end == None:
+             self.temporal_extent = ''
+        else:
+            self.temporal_extent = (time_start,time_end)
+
         self.variable = variable_name
         self.area_name = area_name
         self.folder = folder
@@ -22,13 +27,21 @@ class package_api:
         
     def make_package(self):
         if self.get_package_exists(): return
-        kwgs = {'dataset':self.dataset,
+        if self.temporal_extent == '':
+                kwgs = {'dataset':self.dataset,
                 'polygon':'[[{0},{2}],[{1},{2}],[{1},{3}],[{0},{3}],[{0},{2}]]'.format(self.coordinates[0],self.coordinates[1],self.coordinates[2],self.coordinates[3]),
                 'grouping':'location',
-                'time_start':self.temporal_extent[0],
-                'time_end':self.temporal_extent[1],
                 'package':self.package_key,
                 'var':self.variable_name}
+                'time_recent:true'
+        else:
+            kwgs = {'dataset':self.dataset,
+                    'polygon':'[[{0},{2}],[{1},{2}],[{1},{3}],[{0},{3}],[{0},{2}]]'.format(self.coordinates[0],self.coordinates[1],self.coordinates[2],self.coordinates[3]),
+                    'grouping':'location',
+                    'time_start':self.temporal_extent[0],
+                    'time_end':self.temporal_extent[1],
+                    'package':self.package_key,
+                    'var':self.variable_name}
         putrequest = "http://{0}/{1}/{2}?apikey={3}".format(self.dh.server,self.dh.version,'packages',self.dh.apikey)
         for i,j in kwgs.items():
             putrequest += "&{0}={1}".format(i,j)
@@ -69,11 +82,16 @@ class package_api:
         
         
     def define_package_key(self):
-        return self.dataset + '_' + iso_time_simplify(self.temporal_extent[0]) + 'to' + \
-               iso_time_simplify(self.temporal_extent[1]) + '_' + self.area_name 
+        if not self.temporal_extent == '':
+            return self.dataset + '_' + iso_time_simplify(self.temporal_extent[0]) + 'to' + \
+                   iso_time_simplify(self.temporal_extent[1]) + '_' + self.area_name 
+        else:
+            today = iso_time_simplify(str(datetime.date.today()))
+            return self.dataset + '_recent_reftime_' + today + '_' + self.area_name 
+
         
     def get_local_file_name(self):
-        return self.folder + '/' + self.package_key + '.nc'
+        return self.folder + self.package_key + '.nc'
 
     def wait_for_package_completion(self,maxtime=600):
         check_time = 10
@@ -109,10 +127,16 @@ class package_api:
     def unzip(self):
         zip_filename = self.package_key + '.zip'
         zip_ref = zipfile.ZipFile(zip_filename, 'r')
-        zip_ref.extract('data',)
-        zip_ref.close()
+        zip_ref.extractall(self.folder)
+        if self.temporal_extent == '':
+            files = os.listdir(self.folder + 'reference_time')
+
+            os.rename(self.folder + 'reference_time/' + files[-1] + '/data', self.local_file_name)
+        else:
+            os.rename(self.folder + 'data', self.local_file_name)
         os.remove(zip_filename)
-        os.rename(self.folder + 'data', self.local_file_name)
+        os.remove(self.folder + 'reference_time')
+        
 
 def iso_time_simplify(indate):
     return indate.replace(':','').replace('-','')
