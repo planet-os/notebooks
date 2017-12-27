@@ -6,6 +6,7 @@ import json
 import zipfile
 from .lib.parse_urls import parse_urls
 import datetime
+import shutil
 
 class package_api:
     def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start=None,time_end=None,area_name="",folder='./'):
@@ -132,10 +133,11 @@ class package_api:
             files = os.listdir(self.folder + 'reference_time')
 
             os.rename(self.folder + 'reference_time/' + files[-1] + '/data', self.local_file_name)
+            shutil.rmtree(self.folder + 'reference_time')
+
         else:
             os.rename(self.folder + 'data', self.local_file_name)
         os.remove(zip_filename)
-        os.remove(self.folder + 'reference_time')
         
 
 def iso_time_simplify(indate):
