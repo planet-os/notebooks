@@ -7,6 +7,7 @@ from matplotlib.ticker import ScalarFormatter
 import numpy
 import matplotlib.gridspec as gridspec
 import datetime
+import numpy as np
 
 server = "http://api.planetos.com/v1/datasets/"
 def generate_point_api_query(server, dataset_key, longitude, latitude, API_key, count=100000, z='all',verbose = 'False', **kwargs):
@@ -105,3 +106,43 @@ def get_comparison_graph(lon1,lat1,data1,lon2,lat2,data2,title):
 
     plt.colorbar(c2,cax = cbar_loc)
     plt.show()
+
+def comparison_bar_chart(data1,area_name1, data2,area_name2,xaxis_label, xtick_range,yaxis_label,title):
+    fig = plt.figure(figsize=(20,5))
+    ax = fig.add_subplot(111)
+    bar_width = 0.35
+    opacity = 0.4
+    ax.bar(np.arange(0,len(data1),1)-bar_width/2,data1,
+           bar_width,
+           color='#00FF00',
+           label = area_name1)
+    ax.bar(np.arange(0,len(data2),1)+bar_width/2,data2,
+           bar_width,
+           color='orange',
+           label = area_name2)
+    plt.setp(ax, xticks = np.arange(0,len(data1),1),
+             xticklabels=xtick_range)
+    plt.xlabel(xaxis_label)
+    plt.ylabel(yaxis_label)
+    plt.grid()
+    plt.title(title)
+    plt.legend()
+    plt.show()
+
+def make_comparison_plot(data1,area_name1,data2,area_name2,title,**kwargs):
+    fig = plt.figure(figsize=(20,5))
+    ax = fig.add_subplot(111)
+    try:
+        ax.plot(data1.year,data1,'-*',label = area_name1,color = '#00FF00')
+        ax.plot(data2.year,data2,'-o',label = area_name2,color = 'orange')
+    except AttributeError:
+        ax.plot(data1.time1[:],data1,'-*',label = area_name1,color = '#00FF00')
+        ax.plot(data2.time1[:],data2,'-o',label = area_name2,color = 'orange')
+    if 'xaxis_label' in kwargs:
+        plt.xlabel(kwargs['xaxis_label'])
+    if 'yaxis_label' in kwargs:
+        plt.ylabel(kwargs['yaxis_label'])
+    plt.grid()
+    plt.legend()
+    plt.minorticks_on()
+    plt.title(title)    
