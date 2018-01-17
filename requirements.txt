@@ -1,6 +1,6 @@
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
-# basemap==1.0.7
+basemap==1.0.7
 branca==0.1.1
 click==6.6
 click-plugins==1.0.3
@@ -9,7 +9,7 @@ cycler==0.10.0
 decorator==4.0.9
 descartes==1.0.2
 entrypoints==0.2.1
-#Fiona==1.7.0.post2
+Fiona==1.7.0.post2
 folium==0.2.1
 geopandas==0.2.1
 gnureadline==6.3.3
@@ -24,12 +24,12 @@ jupyter-client==4.2.2
 jupyter-console==4.1.1
 jupyter-core==4.1.0
 MarkupSafe==0.23
-#matplotlib==1.5.2
+matplotlib==1.5.2
 mistune==0.7.2
 munch==2.0.4
 nbconvert==4.2.0
 nbformat==4.0.1
-#netCDF4==1.2.4
+netCDF4==1.2.4
 notebook==4.2.0
 numpy==1.11.1
 pandas==0.18.1
@@ -43,8 +43,8 @@ python-dateutil==2.5.3
 pytz==2016.6.1
 pyzmq==15.2.0
 qtconsole==4.2.1
-#scipy==0.18.0
-#Shapely==1.5.16
+scipy==0.18.0
+Shapely==1.5.16
 simplegeneric==0.8.1
 simplejson==3.8.2
 six==1.10.0
