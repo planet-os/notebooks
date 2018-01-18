@@ -13,7 +13,11 @@ class package_api:
         self.dh = dh
         self.dataset = dataset
         self.variable_name = variable_name
-        self.coordinates = (longitude_west,longitude_east,latitude_south,latitude_north)
+        if longitude_west == longitude_east and latitude_south == latitude_north:
+            self.coordinates = (longitude_west,latitude_south) #first two will bo lon, lat, if no more coordinates are given
+        else:
+            self.coordinates = (longitude_west,longitude_east,latitude_south,latitude_north)
+    
         if time_start == None or time_end == None:
              self.temporal_extent = ''
         else:
@@ -24,30 +28,48 @@ class package_api:
         self.folder = folder
         self.package_key = self.define_package_key()
         self.local_file_name = self.get_local_file_name()
-
         
     def make_package(self):
         if self.get_package_exists(): return
-        if self.temporal_extent == '':
+
+        if len(self.coordinates) == 4:
+            if self.temporal_extent == '':
                 kwgs = {'dataset':self.dataset,
-                'polygon':'[[{0},{2}],[{1},{2}],[{1},{3}],[{0},{3}],[{0},{2}]]'.format(self.coordinates[0],self.coordinates[1],self.coordinates[2],self.coordinates[3]),
-                'grouping':'location',
-                'package':self.package_key,
-                'var':self.variable_name}
-                'time_recent:true'
-        else:
-            kwgs = {'dataset':self.dataset,
                     'polygon':'[[{0},{2}],[{1},{2}],[{1},{3}],[{0},{3}],[{0},{2}]]'.format(self.coordinates[0],self.coordinates[1],self.coordinates[2],self.coordinates[3]),
+                    'grouping':'location',
+                    'package':self.package_key,
+                    'var':self.variable_name,
+                    'time_recent':'true'}
+            else:
+                kwgs = {'dataset':self.dataset,
+                        'polygon':'[[{0},{2}],[{1},{2}],[{1},{3}],[{0},{3}],[{0},{2}]]'.format(self.coordinates[0],self.coordinates[1],self.coordinates[2],self.coordinates[3]),
+                        'grouping':'location',
+                        'time_start':self.temporal_extent[0],
+                        'time_end':self.temporal_extent[1],
+                        'package':self.package_key,
+                        'var':self.variable_name}
+        else:
+            if self.temporal_extent == '':
+                    kwgs = {'dataset':self.dataset,
+                    'lon':str(self.coordinates[0]), 
+                    'lat':str(self.coordinates[1]),
+                    'grouping':'location',
+                    'package':self.package_key,
+                    'var':self.variable_name,
+                    'time_recent':'true'}
+            else:
+                kwgs = {'dataset':self.dataset,
+                    'lon':str(self.coordinates[0]), 
+                    'lat':str(self.coordinates[1]),
                     'grouping':'location',
                     'time_start':self.temporal_extent[0],
                     'time_end':self.temporal_extent[1],
                     'package':self.package_key,
-                    'var':self.variable_name}
+                    'var':self.variable_name} 
         putrequest = "http://{0}/{1}/{2}?apikey={3}".format(self.dh.server,self.dh.version,'packages',self.dh.apikey)
         for i,j in kwgs.items():
             putrequest += "&{0}={1}".format(i,j)
         mp = requests.put(putrequest)
-
         if mp.status_code == 200:
             return
         else:

@@ -14,7 +14,6 @@ class dataset:
 
     def variables(self):
         variables=parse_urls(self.datahub.server,self.datahub.version,"datasets/"+self.datasetkey+"/variables",self.datahub.apikey)
-        
         return variables.r.json()['variables']
 
     def variable_names(self):
