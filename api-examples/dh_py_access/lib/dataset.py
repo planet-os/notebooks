@@ -104,3 +104,8 @@ class dataset:
         retjson=parse_urls(self.datahub.server,self.datahub.version,"datasets/{0}/point".format(self.datasetkey),self.datahub.apikey,clean_reftime=False,**kwargs).r.json()
         if pandas: retjson=convert_json_to_some_pandas(retjson['entries'])
         return retjson
+
+    def get_dataset_boundaries(self):
+        boundaries=parse_urls(self.datahub.server,self.datahub.version,"datasets/"+self.datasetkey,self.datahub.apikey)
+        
+        return boundaries.r.json()['SpatialExtent']
