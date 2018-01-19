@@ -112,7 +112,7 @@ def make_plot(data,dataset_key1,title,**kwargs):
             plt.plot([np.min(data_time).values-2,np.max(data_time).values+2],[kwargs['compare_line'],kwargs['compare_line']],':',c='red',linewidth=1.5)
     fig.autofmt_xdate()
     plt.xticks(rotation = 0)
-    plt.savefig('plot_out' + title + '.png', dpi=300)
+    #plt.savefig('plot_out' + title + '.png', dpi=300)
     plt.show()
 
 def running_mean(x, N):
