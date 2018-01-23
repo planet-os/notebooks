@@ -107,5 +107,11 @@ class dataset:
 
     def get_dataset_boundaries(self):
         boundaries=parse_urls(self.datahub.server,self.datahub.version,"datasets/"+self.datasetkey,self.datahub.apikey)
-        
-        return boundaries.r.json()['SpatialExtent']
+        rj = boundaries.r.json()['SpatialExtent']
+        if rj['type'] == 'Polygon':
+            rdict = rj['coordinates'][0]
+        elif rj['type'] == 'MultiPolygon':
+            rdict = rj['coordinates'][0][0]
+        else:
+            rdict = rj
+        return rdict
