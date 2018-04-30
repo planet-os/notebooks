@@ -10,7 +10,7 @@ import datetime
 import shutil
 
 class package_api:
-    def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start=None,time_end=None,area_name="",folder='./'):
+    def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start=None,time_end=None,area_name="",folder='./',z='all'):
         self.dh = dh
         self.dataset = dataset
         self.variable_name = variable_name
@@ -29,6 +29,7 @@ class package_api:
         self.folder = folder
         self.package_key = self.define_package_key()
         self.local_file_name = self.get_local_file_name()
+        self.z_select = z
         
     def make_package(self):
         if self.get_package_exists():
@@ -37,7 +38,8 @@ class package_api:
         kwgs = {'apikey': self.dh.apikey,
                 'dataset': self.dataset,
                 'package': self.package_key,
-                'var': self.variable_name}
+                'var': self.variable_name,
+                'z': self.z_select}
     
         if len(self.coordinates) == 4:
             polygon = [[self.coordinates[0], self.coordinates[2]],
