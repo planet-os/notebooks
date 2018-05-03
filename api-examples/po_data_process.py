@@ -52,7 +52,7 @@ def get_units(dataset_key, variable,API_key):
 
 def get_data_from_point_API(dataset_key, longitude, latitude, API_key):
     
-    data = convert_json_to_some_pandas(read_data_to_json(generate_point_api_query(server, dataset_key, longitude, latitude, API_key))['entries'])
+    data = convert_json_to_some_pandas(read_data_to_json(generate_point_api_query(dataset_key, longitude, latitude, API_key))['entries'])
     return data
 
 def get_data_from_raster_API(dataset_key, longitude, latitude, API_key):
