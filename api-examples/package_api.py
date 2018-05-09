@@ -11,6 +11,9 @@ def generate_links(folder,dataset_key,API_key,longitude_west,longitude_east,lati
     put_http = 'https://api.planetos.com/v1/packages?dataset={0}&apikey={1}&polygon=[[{2},{4}],[{3},{4}],[{3},{5}],[{2},{5}],[{2},{4}]]&grouping=location&reftime_recent=true&time_start={6}&time_end={7}&package={8}&var={9}&count=1000'.format(dataset_key,API_key,longitude_west,longitude_east,latitude_south,latitude_north,time_start,time_end,package_key,variable)
     get_status_http = 'https://api.planetos.com/v1/packages/{0}?apikey={1}'.format(package_key,API_key)
     get_data_http = 'https://api.planetos.com/v1/packages/{0}/data?apikey={1}'.format(package_key,API_key)
+    print (put_http)
+    print (get_status_http)
+    print (get_data_http)
     return package_key, put_http, get_status_http, get_data_http
 
 def make_package(put_http,get_status_http):
@@ -45,14 +48,18 @@ def get_package(get_data_http,get_status_http,package_key):
     stats_json = json.loads(r_get_content)
     if 'packageResult' in stats_json:
         if stats_json['packageResult']['success'] == True:
-            r = requests.get(get_data_http,stream = True)
-            if r.status_code == 200:
-                 with open(package_key + ".zip", "wb") as dat:
-                    dat.write(r.content)
+            if 'does not contain' in stats_json['packageStatus']['message']:
+                raise Exception((str(stats_json['packageStatus']['message'])) + ' Please choose another date')
+                
             else:
-                print ('something happened while downloading data. Please try again.')
-                sys.exit()
-            status = 'Package downloaded'
+                r = requests.get(get_data_http,stream = True)
+                if r.status_code == 200:
+                     with open(package_key + ".zip", "wb") as dat:
+                        dat.write(r.content)
+                else:
+                    print ('something happened while downloading data. Please try again.')
+                    sys.exit()
+                status = 'Package downloaded'
         else:
         	status = 'Package not downloaded'
     else:
