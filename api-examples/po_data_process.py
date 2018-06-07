@@ -13,14 +13,20 @@ from matplotlib.ticker import MultipleLocator
 mpl.rcParams['font.size'] = 16
 
 server = "http://api.planetos.com/v1/datasets/"
+
+
 def generate_point_api_query(dataset_key, longitude, latitude, API_key, count=100000, z='all',verbose = 'False', **kwargs):
     server = "http://api.planetos.com/v1/datasets/"
     returl = server + dataset_key + "/point?lat={0}&lon={1}&apikey={2}&count={3}&z={4}&verbose={5}".format(latitude,longitude,API_key,count,z,verbose)
     for i,j in kwargs.items():
         returl += "&{0}={1}".format(i,j)
+    print (returl)
+
     return returl
 
-def generate_raster_api_query(dataset_key,server, longitude_west, latitude_south, longitude_east, latitude_north, API_key,count=100, **kwargs):
+def generate_raster_api_query(dataset_key,server, longitude_west, latitude_south, longitude_east, latitude_north, API_key,count=10000, **kwargs):
+    if not server.startswith('http'):
+        server = "http://api.planetos.com/v1/datasets/"
     returl = server + dataset_key + "/area?apikey={0}&polygon=[[{1},{3}],[{2},{3}],[{2},{4}],[{1},{4}],[{1},{3}]]&grouping=location&count={5}&reftime_recent=true".format(API_key,longitude_west,longitude_east,latitude_south,latitude_north,count)
     for i,j in kwargs.items():
         returl += "&{0}={1}".format(i,j)
@@ -40,7 +46,10 @@ def convert_json_to_some_pandas(injson):
     [new_dict.update({i:[]}) for i in param_list]
     [(new_dict['axes'].append(i['axes']),new_dict['data'].append(i['data'])) for i in injson];
     pd_temp = pd.DataFrame(injson)
-    dev_frame = pd_temp[['context','axes']].join(pd.concat([pd.DataFrame(new_dict[i]) for i in param_list],axis=1))
+    if 'indexAxes' in pd_temp:
+        dev_frame = pd_temp[['context', 'axes','indexAxes']].join(pd.concat([pd.DataFrame(new_dict[i]) for i in param_list], axis=1))
+    else:
+        dev_frame = pd_temp[['context','axes']].join(pd.concat([pd.DataFrame(new_dict[i]) for i in param_list],axis=1))
     return dev_frame
 
 def get_units(dataset_key, variable,API_key):
@@ -50,14 +59,17 @@ def get_units(dataset_key, variable,API_key):
     uns = [v['attributeValue'] for v in attributes if v['attributeKey'] == 'units'][0]
     return uns
 
-def get_data_from_point_API(dataset_key, longitude, latitude, API_key):
-    
-    data = convert_json_to_some_pandas(read_data_to_json(generate_point_api_query(dataset_key, longitude, latitude, API_key))['entries'])
+def get_data_from_point_API(dataset_key, longitude, latitude, API_key,**kwargs):
+    point_data = read_data_to_json(generate_point_api_query(dataset_key, longitude, latitude, API_key,**kwargs))['entries']
+    if not point_data == []:
+        data = convert_json_to_some_pandas(point_data)
+    else:
+        raise Exception('Provided filter does not contain any data.')
     return data
 
-def get_data_from_raster_API(dataset_key, longitude, latitude, API_key):
-    
-    data = convert_json_to_some_pandas(read_data_to_json(generate_raster_api_query(dataset_key,server, longitude_west, latitude_south, longitude_east, latitude_north, API_key))['entries'])
+def get_data_from_raster_API(dataset_key, longitude_west, latitude_south, longitude_east, latitude_north, API_key,**kwargs):
+    data = convert_json_to_some_pandas(read_data_to_json(generate_raster_api_query(dataset_key,server, longitude_west, latitude_south, longitude_east, latitude_north, API_key,**kwargs))['entries'])
+    data['date'] = pd.to_datetime(data['time'])
     return data
 
 def get_data_in_pandas_dataframe(dataset_key, longitude, latitude, API_key):
@@ -67,8 +79,14 @@ def get_data_in_pandas_dataframe(dataset_key, longitude, latitude, API_key):
     data['month'] = data['time'].dt.month
     now = datetime.datetime.now()
     data = data.loc[data['year'] < now.year] 
-    print (data.keys())
     return data
+
+def get_variables_from_detail_api(server,dataset_key,API_key):
+    if not server.startswith('http'):
+        server = "http://api.planetos.com/v1/datasets/"
+    req = urllib.request.urlopen("{0}{1}?apikey={2}".format(server, dataset_key, API_key))
+    data = json.loads(req.read().decode('utf-8'))
+    return [i for i in data['Variables'] if i['isData']]
 
 def make_plot(data,dataset_key1,title,**kwargs):
     fig = plt.figure(figsize=(15,5))
@@ -78,7 +96,13 @@ def make_plot(data,dataset_key1,title,**kwargs):
         try:
             data_time = data.year
         except:
-            data_time = None
+            try:
+                data_time = data['time0.year']
+            except:
+                try:
+                    data_time = data['time1.year']
+                except:
+                    data_time = None
             
     if data_time is not None:
         if 'trend' in kwargs:
@@ -95,7 +119,7 @@ def make_plot(data,dataset_key1,title,**kwargs):
     plt.title(title)
     plt.grid()
     ml = MultipleLocator(1)
-    bl = MultipleLocator(10)
+    bl = MultipleLocator(5)
     plt.axes().xaxis.set_minor_locator(ml)
     plt.axes().xaxis.set_major_locator(bl)
 
@@ -112,9 +136,10 @@ def make_plot(data,dataset_key1,title,**kwargs):
             plt.plot([np.min(data_time).values-2,np.max(data_time).values+2],[kwargs['compare_line'],kwargs['compare_line']],':',c='red',linewidth=1.5)
     fig.autofmt_xdate()
     plt.xticks(rotation = 0)
-    #plt.savefig('plot_out' + title + '.png', dpi=300)
-    plt.show()
-
+    plt.xlim(np.min(data_time).values-0.5,np.max(data_time).values+0.5)
+    plt.savefig('plot_out' + title + '.png', dpi=300)
+    #plt.show()
+    plt.close()
 def running_mean(x, N):
     cumsum = numpy.cumsum(numpy.insert(x, 0, 0)) 
     return (cumsum[N:] - cumsum[:-N]) / N 

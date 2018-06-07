@@ -140,7 +140,7 @@ class dataset:
 
         return stdata.r.json()
 
-    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start_delta = 30):
+    def get_station_data_as_pandas(self, station_list, count=2000, variables='temperature', start_delta = 30):
         """
         Get station list as input and return properly formatted dataframe
         Columns, station ID/var
@@ -151,10 +151,12 @@ class dataset:
         for i in station_list:
             tempdata[i] = []
             dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = (datetime.datetime.today() - datetime.timedelta(days=start_delta)).strftime("%Y-%m-%dT00:00:00"))
-            print(len(dd['entries']))
+            #print(len(dd['entries']),'station', i)
+
             for tval in dd['entries']:
                 for vv in variables:
-                    tempdata[i].append((parse(tval['axes']['time']),tval['data'][vv]))
+                    if vv in tval['data']:
+                        tempdata[i].append((parse(tval['axes']['time']),tval['data'][vv]))
 
         return tempdata
 
