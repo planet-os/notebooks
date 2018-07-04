@@ -38,8 +38,10 @@ def Test_ipynb(filename):
 
 folder = '/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
 
-done = ['BOM_australia_demo.ipynb','PlanetOS_WAve_Models.ipynb','ARC2_CHIRPS_example.py.ipynb','fmi_hirlam_metno_and_gfs.ipynb','swan-oahu-api.ipynb','rbsn_era5_comparison.ipynb']
-ignore = ['GFS_public_full_demo_main.ipynb']
+done = ['BOM_australia_demo.ipynb','PlanetOS_WAve_Models.ipynb','ARC2_CHIRPS_example.py.ipynb','fmi_hirlam_metno_and_gfs.ipynb','swan-oahu-api.ipynb',
+        'rbsn_era5_comparison.ipynb','modis_snow_cover_demo.ipynb','dataset-metadata-api.ipynb','gfs-api.ipynb','model-comparisons.ipynb']
+
+ignore = ['GFS_public_full_demo_main.ipynb','gefs-api.ipynb','ndbc-spectral-wave-density-data-validation.ipynb','Metno_wind_demo.ipynb']
 
 notebooks = _listdir_ipynb(folder)
 for file in notebooks:
