@@ -57,6 +57,7 @@ class package_api:
             kwgs.update({'reftime_recent':'true'})
     
         putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
+        print (putrequest)
         mp = requests.put(putrequest)
         if mp.status_code == 200:
             return
@@ -68,12 +69,12 @@ class package_api:
         return_status = False
         if rrr.r.status_code == 200:
             rjson = rrr.r.json()
+            print (rjson)
             if 'packageResult' in rjson:
                 if rjson['packageResult']['success']:
                     print("Package exists")
                     return_status = True
-            elif rjson['packageStatus'] == 'started':
-                print("Package started")
+            elif rjson['packageStatus']['message'] == 'started':
                 return_status = True
             else:
                 raise ValueError("Unknown package status, exit")

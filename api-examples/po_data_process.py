@@ -102,8 +102,12 @@ def make_plot(data,dataset_key1,title,**kwargs):
                 try:
                     data_time = data['time1.year']
                 except:
-                    data_time = None
-            
+                    try:
+                        data_time = np.array(data.keys())
+                    except:
+                        data_time = None
+
+   
     if data_time is not None:
         if 'trend' in kwargs:
             z = numpy.polyfit(data_time, data, 1)
@@ -136,9 +140,10 @@ def make_plot(data,dataset_key1,title,**kwargs):
             plt.plot([np.min(data_time).values-2,np.max(data_time).values+2],[kwargs['compare_line'],kwargs['compare_line']],':',c='red',linewidth=1.5)
     fig.autofmt_xdate()
     plt.xticks(rotation = 0)
-    plt.xlim(np.min(data_time).values-0.5,np.max(data_time).values+0.5)
+
+    plt.xlim(np.min(data_time)-0.5,np.max(data_time)+0.5)
     plt.savefig('plot_out' + title + '.png', dpi=300)
-    #plt.show()
+    plt.show()
     plt.close()
 def running_mean(x, N):
     cumsum = numpy.cumsum(numpy.insert(x, 0, 0)) 
