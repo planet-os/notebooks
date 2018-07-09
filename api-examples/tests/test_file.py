@@ -1,3 +1,6 @@
+'''
+Tests are running on python 3.6.1
+'''
 import os
 import subprocess
 import tempfile
@@ -10,7 +13,7 @@ def _notebook_run(path):
     dirname, __ = os.path.split(path)
     os.chdir(dirname)
     with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
-        args = ["jupyter nbconvert", "--to", "notebook", "--execute",
+        args = ["/home/etoodu/anaconda3/bin/jupyter nbconvert", "--to", "notebook", "--execute",
           "--ExecutePreprocessor.timeout=1000",
           "--output", fout.name, path]
 
@@ -36,7 +39,7 @@ def Test_ipynb(filename):
     nb, errors = _notebook_run(filename)
     assert errors == []
 
-folder = '/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
+folder = os.path.dirname(os.path.realpath(__file__)) + '/../'#'/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
 
 done = []
 
