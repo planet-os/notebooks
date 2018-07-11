@@ -4,6 +4,8 @@ To provide cloud-based access to ERA5 reanalysis data, Planet OS is working in c
 
 This documentation outlines the dataset's details, available parameters, location and structure on S3, and includes examples of how to access and work with the data.
 
+Please refer to the ECMWF website for the [official ERA5 data documentation.](https://confluence.ecmwf.int/display/CKB/ERA5+data+documentation)
+
 ## Introduction
 
 ERA5 Climate reanalysis provides a numerical assessment of the modern climate. It is produced by a similar process as regular numerical weather forecast, a data assimilation and forecast loop, taking into account most of the available meteorological observations and analyses them with state of the art numerical model, producing a continuous, spatially consistent and homogeneous dataset.
