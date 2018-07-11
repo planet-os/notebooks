@@ -228,4 +228,5 @@ This dataset is also accessible via the [Planet OS Datahub](https://data.planeto
 * [Accessing ERA5 Data on S3 Using Boto](https://github.com/planet-os/notebooks/blob/master/aws/era5-s3-via-boto.ipynb)
 * [Analyzing wind speed and temperature relation in Estonia](https://medium.com/planet-os/too-cold-for-more-wind-e6fa6038ec41)
 * [Using the Planet OS Datahub API to work with ERA5 data in python](https://github.com/planet-os/notebooks/blob/master/api-examples/ERA5_tutorial.ipynb)
+* [ERA5: The new champion of wind power modelling?](https://doi.org/10.1016/j.renene.2018.03.056)
 * [Evaluation of global horizontal irradiance estimates](https://doi.org/10.1016/j.solener.2018.02.059)
