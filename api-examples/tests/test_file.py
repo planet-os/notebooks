@@ -1,3 +1,6 @@
+'''
+Tests are running on python 3.6.1
+'''
 import os
 import subprocess
 import tempfile
@@ -10,7 +13,7 @@ def _notebook_run(path):
     dirname, __ = os.path.split(path)
     os.chdir(dirname)
     with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
-        args = ["jupyter nbconvert", "--to", "notebook", "--execute",
+        args = ["/home/etoodu/anaconda3/bin/jupyter nbconvert", "--to", "notebook", "--execute",
           "--ExecutePreprocessor.timeout=1000",
           "--output", fout.name, path]
 
@@ -36,16 +39,12 @@ def Test_ipynb(filename):
     nb, errors = _notebook_run(filename)
     assert errors == []
 
-folder = '/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
+folder = os.path.dirname(os.path.realpath(__file__)) + '/../'#'/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
 
-done = ['BOM_australia_demo.ipynb','PlanetOS_WAve_Models.ipynb','ARC2_CHIRPS_example.py.ipynb','fmi_hirlam_metno_and_gfs.ipynb','swan-oahu-api.ipynb',
-        'rbsn_era5_comparison.ipynb','modis_snow_cover_demo.ipynb','dataset-metadata-api.ipynb','gfs-api.ipynb','model-comparisons.ipynb','cams_air_quality_demo.ipynb',
-        'hycom-api.ipynb','cfsr_demo.ipynb','CHIRPS_example.ipynb','cams_air_quality_hawaii.ipynb','ndbc-wavewatch-iii.ipynb','ERA5_tutorial.ipynb','rtofs-reftime-vs-time.ipynb',
-        'gefs-api.ipynb']
+done = []
 
 ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb',
-          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','SMAP_brazil.ipynb','SMAP_package-api.ipynb',
-          'URD-CONUS_CHIRP_with_package.ipynb']
+          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','SMAP_brazil.ipynb','SMAP_package-api.ipynb']
 
 notebooks = _listdir_ipynb(folder)
 for file in notebooks:
