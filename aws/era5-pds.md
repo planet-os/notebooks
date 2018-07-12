@@ -27,7 +27,7 @@ Data is currently available since 2008, but will be continuously extended backwa
   </tr>
   <tr>
     <td>Format</td>
-    <td>NetCDF4</td>
+    <td>NetCDF</td>
   </tr>
   <tr>
     <td>License</td>
@@ -61,63 +61,75 @@ The table below lists the 15 ERA5 variables that are available on S3. All variab
   </tr>
   <tr>
     <td>10 metre U wind component</td>
-    <td>eastward_wind_at_10_metres.nc4</td>
+    <td>eastward_wind_at_10_metres.nc</td>
   </tr>
   <tr>
     <td>10 metre V wind component</td>
-    <td>northward_wind_at_10_metres.nc4</td>
+    <td>northward_wind_at_10_metres.nc</td>
   </tr>
   <tr>
     <td>100 metre U wind component</td>
-    <td>eastward_wind_at_100_metres.nc4</td>
+    <td>eastward_wind_at_100_metres.nc</td>
   </tr>
   <tr>
     <td>100 metre V wind component</td>
-    <td>northward_wind_at_100_metres.nc4</td>
+    <td>northward_wind_at_100_metres.nc</td>
   </tr>
   <tr>
     <td>2 metre dew point temperature</td>
-    <td>dew_point_temperature_at_2_metres.nc4</td>
+    <td>dew_point_temperature_at_2_metres.nc</td>
   </tr>
   <tr>
     <td>2 metre temperature</td>
-    <td>air_temperature_at_2_metres.nc4</td>
+    <td>air_temperature_at_2_metres.nc</td>
   </tr>
   <tr>
     <td>2 metres maximum temperature since previous post-processing</td>
-    <td>air_temperature_at_2_metres_1hour_Maximum.nc4</td>
+    <td>air_temperature_at_2_metres_1hour_Maximum.nc</td>
   </tr>
   <tr>
     <td>2 metres minimum temperature since previous post-processing</td>
-    <td>air_temperature_at_2_metres_1hour_Minimum.nc4</td>
+    <td>air_temperature_at_2_metres_1hour_Minimum.nc</td>
   </tr>
   <tr>
     <td>Mean sea level pressure</td>
-    <td>air_pressure_at_mean_sea_level.nc4</td>
+    <td>air_pressure_at_mean_sea_level.nc</td>
   </tr>
   <tr>
     <td>Sea surface temperature</td>
-    <td>sea_surface_temperature.nc4</td>
+    <td>sea_surface_temperature.nc</td>
+  </tr>
+  <tr>
+    <td>Mean wave period</td>
+    <td>sea_surface_wave_mean_period.nc</td>
+  </tr>
+  <tr>
+    <td>Mean direction of wind waves</td>
+    <td>sea_surface_wind_wave_from_direction.nc</td>
+  </tr>
+  <tr>
+    <td>Significant height of combined wind waves and swell</td>
+    <td>significant_height_of_wind_and_swell_waves.nc</td>
   </tr>
   <tr>
     <td>Snow density</td>
-    <td>snow_density.nc4</td>
+    <td>snow_density.nc</td>
   </tr>
   <tr>
     <td>Snow depth</td>
-    <td>lwe_thickness_of_surface_snow_amount.nc4</td>
+    <td>lwe_thickness_of_surface_snow_amount.nc</td>
   </tr>
   <tr>
     <td>Surface pressure</td>
-    <td>surface_air_pressure.nc4</td>
+    <td>surface_air_pressure.nc</td>
   </tr>
   <tr>
     <td>Surface solar radiation downwards</td>
-    <td>integral_wrt_time_of_surface_direct_downwelling_shortwave_flux_in_air_1hour_Accumulation.nc4</td>
+    <td>integral_wrt_time_of_surface_direct_downwelling_shortwave_flux_in_air_1hour_Accumulation.nc</td>
   </tr>
   <tr>
     <td>Total precipitation</td>
-    <td>precipitation_amount_1hour_Accumulation.nc4</td>
+    <td>precipitation_amount_1hour_Accumulation.nc</td>
   </tr>
 </table>
 
@@ -183,16 +195,16 @@ If there are specific variables you would like to recommend for future inclusion
 
 ## Data Structure
 
-The ERA5 dataset has been transformed to optimize access by specific variables and temporal ranges. To accommodate this, data is divided into distinct NetCDF 4 granules organized by year, month, and variable name.
+The ERA5 dataset has been transformed to optimize access by specific variables and temporal ranges. To accommodate this, data is divided into distinct NetCDF granules organized by year, month, and variable name.
 
 The data is structured as follows:
 
 ```
 /{year}/{month}/main.nc
-               /data/{var1}.nc4
-                    /{var2}.nc4
-                    /{....}.nc4
-                    /{varN}.nc4
+               /data/{var1}.nc
+                    /{var2}.nc
+                    /{....}.nc
+                    /{varN}.nc
 ```
 
 where **year** is expressed as four digits (e.g. YYYY) and **month** as two digits (e.g. MM). Individual data variables (**var1** through **varN**) use names corresponding to [NetCDF CF standard names convention](http://cfconventions.org) plus any applicable additional info, such as vertical coordinate.
@@ -202,7 +214,7 @@ Granule variable structure and metadata attributes are stored in **main.nc**. Th
 A sample path for air temperature would take the following form:
 
 ```
-/2008/01/data/air_temperature_at_2_metres.nc4
+/2008/01/data/air_temperature_at_2_metres.nc
 ```
 
 Note that due to the nature of the ERA5 forecast timing, which is run twice daily at 06:00 and 18:00 UTC, monthly data files begins with data from 07:00 on the first of the month and continue through 06:00 of the following month. This means the first six hours of data for each month are contained in the previous month’s file.
@@ -217,7 +229,7 @@ In the unlikely event that a major update impacting the data structure or its di
 
 The data is publicly available in the ERA5 S3 bucket (era5-pds) and may be directly accessed there. Please note that the best transfer speeds will be achieved by accessing the data from an EC2 instance located in the same AWS region as the S3 bucket (us-east-1).
 
-Data may be accessed via http using the S3 REST API. To make a GET request, use the bucket name and the full key name for the object. For example, to download air temperature at 2 meters for January, 2008, submit a GET request to the following url: [http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc4](http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc4)
+Data may be accessed via http using the S3 REST API. To make a GET request, use the bucket name and the full key name for the object. For example, to download air temperature at 2 meters for January, 2008, submit a GET request to the following url: [http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc](http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc)
 
 Another option is to use the [AWS SDK or CLI.](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html) We’ve published a jupyter notebook on GitHub that provides an example of [how to access ERA5 data in python using boto](https://github.com/planet-os/notebooks/blob/master/aws/era5-s3-via-boto.ipynb).
 
