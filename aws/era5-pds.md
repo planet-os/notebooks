@@ -52,7 +52,7 @@ Data is currently available since 2008, but will be continuously extended backwa
 
 ## Variables
 
-The table below lists the 15 ERA5 variables that are available on S3. All variables are surface or single level parameters sourced from the HRES sub-daily forecast stream.
+The table below lists the 18 ERA5 variables that are available on S3. All variables are surface or single level parameters sourced from the HRES sub-daily forecast stream.
 
 <table>
   <tr>
