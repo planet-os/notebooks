@@ -50,5 +50,8 @@ for file in notebooks:
     if not file in done and not file in ignore:
         print ('testing ' + file)
         filename = folder + file
-        Test_ipynb(filename)
+        try:
+            Test_ipynb(filename)
+        except:
+            'ERROR ' + str(filename) + ' Notebook failed'
 print ('All notebooks are tested. Except ignore list: ' + str(ignore))
