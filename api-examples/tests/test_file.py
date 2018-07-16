@@ -14,7 +14,7 @@ def _notebook_run(path):
     os.chdir(dirname)
     with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
         args = ["/home/etoodu/anaconda3/bin/jupyter nbconvert", "--to", "notebook", "--execute",
-          "--ExecutePreprocessor.timeout=1000",
+          "--ExecutePreprocessor.timeout=5000",
           "--output", fout.name, path]
 
         command = ' '.join(args)
@@ -42,9 +42,8 @@ def Test_ipynb(filename):
 folder = os.path.dirname(os.path.realpath(__file__)) + '/../'#'/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
 
 done = []
-
-ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb',
-          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','SMAP_brazil.ipynb','SMAP_package-api.ipynb']
+ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb','CHIRPS_example.ipynb',
+          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','SMAP_brazil.ipynb','SMAP_package-api.ipynb','ARC2_CHIRPS_example.py.ipynb'] #ignore arc2 chirps as package api is so slow right now
 
 notebooks = _listdir_ipynb(folder)
 for file in notebooks:
@@ -52,3 +51,4 @@ for file in notebooks:
         print ('testing ' + file)
         filename = folder + file
         Test_ipynb(filename)
+print ('All notebooks are tested. Except ignore list: ' + str(ignore))
