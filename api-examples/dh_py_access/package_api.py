@@ -74,6 +74,9 @@ class package_api:
                 if rjson['packageResult']['success']:
                     print("Package exists")
                     return_status = True
+            elif 'packageSubmitted' in rjson:
+                if rjson['packageSubmitted'] == True:
+                    return_status = True
             elif rjson['packageStatus']['message'] == 'started':
                 return_status = True
             else:
