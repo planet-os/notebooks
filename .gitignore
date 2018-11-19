@@ -59,3 +59,6 @@ target/
 
 #Ipython Notebook
 .ipynb_checkpoints
+
+#example animations
+.*mp4
