@@ -9,20 +9,21 @@ import urllib
 import datetime
 import shutil
 
+
 class package_api:
-    def __init__(self,dh,dataset,variable_name,longitude_west,longitude_east,latitude_south,latitude_north,time_start=None,time_end=None,area_name="",folder='./',z='all'):
+    def __init__(self, dh, dataset, variable_name, longitude_west, longitude_east, latitude_south, latitude_north, time_start=None, time_end=None, area_name="", folder='./', z='all'):
         self.dh = dh
         self.dataset = dataset
         self.variable_name = variable_name
         if longitude_west == longitude_east and latitude_south == latitude_north:
-            self.coordinates = (longitude_west,latitude_south) #first two will bo lon, lat, if no more coordinates are given
+            self.coordinates = (longitude_west, latitude_south)  # first two will bo lon, lat, if no more coordinates are given
         else:
-            self.coordinates = (longitude_west,longitude_east,latitude_south,latitude_north)
-    
+            self.coordinates = (longitude_west, longitude_east, latitude_south, latitude_north)
+
         if time_start == None or time_end == None:
-             self.temporal_extent = ''
+            self.temporal_extent = ''
         else:
-            self.temporal_extent = (time_start,time_end)
+            self.temporal_extent = (time_start, time_end)
 
         self.variable = variable_name
         self.area_name = area_name
@@ -30,17 +31,20 @@ class package_api:
         self.package_key = self.define_package_key()
         self.local_file_name = self.get_local_file_name()
         self.z_select = z
-        
+        if type(variable_name) == list:
+            self.variable_name = ','.join(variable_name)
+
+
     def make_package(self):
         if self.get_package_exists():
             return
-    
+
         kwgs = {'apikey': self.dh.apikey,
                 'dataset': self.dataset,
                 'package': self.package_key,
                 'var': self.variable_name,
                 'z': self.z_select}
-    
+
         if len(self.coordinates) == 4:
             polygon = [[self.coordinates[0], self.coordinates[2]],
                        [self.coordinates[1], self.coordinates[2]],
@@ -50,41 +54,39 @@ class package_api:
             kwgs.update({'polygon': polygon})
         else:
             kwgs.update({'lon': self.coordinates[0], 'lat': self.coordinates[1]})
-    
+
         if self.temporal_extent:
             kwgs.update({'time_start': self.temporal_extent[0], 'time_end': self.temporal_extent[1]})
         else:
-            kwgs.update({'reftime_recent':'true'})
-    
+            kwgs.update({'reftime_recent': 'true'})
+
         putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
-        print (putrequest)
+        #print (putrequest)
         mp = requests.put(putrequest)
         if mp.status_code == 200:
             return
         else:
             raise ValueError("Package submittion failed")
-            
+
     def get_package_exists(self):
-        rrr = parse_urls(self.dh.server,self.dh.version,'packages/'+self.package_key,self.dh.apikey)
+        rrr = parse_urls(self.dh.server, self.dh.version, 'packages/' + self.package_key, self.dh.apikey)
+        #print (rrr)
         return_status = False
         if rrr.r.status_code == 200:
             rjson = rrr.r.json()
-            print (rjson)
             if 'packageResult' in rjson:
                 if rjson['packageResult']['success']:
                     print("Package exists")
                     return_status = True
-            elif 'packageSubmitted' in rjson:
-                if rjson['packageSubmitted'] == True:
-                    return_status = True
             elif rjson['packageStatus']['message'] == 'started':
+                print("Package started")
                 return_status = True
             else:
                 raise ValueError("Unknown package status, exit")
         return return_status
-        
+
     def get_status(self):
-        rrr = parse_urls(self.dh.server,self.dh.version,'packages/'+self.package_key,self.dh.apikey)
+        rrr = parse_urls(self.dh.server, self.dh.version, 'packages/' + self.package_key, self.dh.apikey)
         rjson = rrr.r.json()
         if 'packageResult' in rjson:
             if rjson['packageResult']['success'] == True:
@@ -94,26 +96,25 @@ class package_api:
         else:
             return_status = 'not_ready'
         return return_status
-        
-        
+
     def define_package_key(self):
         if not self.temporal_extent == '':
             return self.dataset + '_' + iso_time_simplify(self.temporal_extent[0]) + 'to' + \
-                   iso_time_simplify(self.temporal_extent[1]) + '_' + self.area_name 
+                   iso_time_simplify(self.temporal_extent[1]) + '_' + self.area_name
         else:
             today = iso_time_simplify(str(datetime.date.today()))
-            return self.dataset + '_recent_reftime_' + today + '_' + self.area_name 
+            return self.dataset + '_recent_reftime_' + today + '_' + self.area_name
 
-        
     def get_local_file_name(self):
         return self.folder + self.package_key + '.nc'
 
-    def wait_for_package_completion(self,maxtime=600):
+    def wait_for_package_completion(self, maxtime=600):
         check_time = 10
         count = 0
         while count * check_time <= maxtime:
             status = self.get_status()
-            if status == 'ready': return True
+            if status == 'ready':
+                return True
             elif status == 'not_ready':
                 time.sleep(check_time)
             else:
@@ -122,16 +123,16 @@ class package_api:
         return False
 
     def get_download_path(self):
-        return "http://{0}/{1}/packages/{2}/data?apikey={3}".format(self.dh.server,self.dh.version,self.package_key,self.dh.apikey)
-    
+        return "http://{0}/{1}/packages/{2}/data?apikey={3}".format(self.dh.server, self.dh.version, self.package_key, self.dh.apikey)
+
     def download_package(self):
         if os.path.exists(self.local_file_name):
             print("File already downloaded")
             return
         if self.wait_for_package_completion():
-            r = requests.get(self.get_download_path(),stream = True)
+            r = requests.get(self.get_download_path(), stream=True)
             if r.status_code == 200:
-                 with open(self.package_key + ".zip", "wb") as dat:
+                with open(self.package_key + ".zip", "wb") as dat:
                     dat.write(r.content)
             else:
                 raise ValueError('something happened while downloading data. Please try again.')
@@ -152,8 +153,8 @@ class package_api:
         else:
             os.rename(self.folder + 'data', self.local_file_name)
         os.remove(zip_filename)
-        
+
 
 def iso_time_simplify(indate):
-    return indate.replace(':','').replace('-','')
-        
+    return indate.replace(':', '').replace('-', '')
+
