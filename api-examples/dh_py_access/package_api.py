@@ -144,7 +144,7 @@ class package_api:
         zip_filename = self.package_key + '.zip'
         zip_ref = zipfile.ZipFile(zip_filename, 'r')
         zip_ref.extractall(self.folder)
-        if self.temporal_extent == '':
+        if self.temporal_extent == '' or not os.path.exists(self.folder + 'data'):
             files = os.listdir(self.folder + 'reference_time')
 
             os.rename(self.folder + 'reference_time/' + files[-1] + '/data', self.local_file_name)
