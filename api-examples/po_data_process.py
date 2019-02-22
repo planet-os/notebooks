@@ -10,6 +10,7 @@ import datetime
 import numpy as np
 import matplotlib as mpl
 from matplotlib.ticker import MultipleLocator
+mpl.rcParams['font.family'] = 'Avenir Lt Std'
 mpl.rcParams['font.size'] = 16
 
 server = "http://api.planetos.com/v1/datasets/"
@@ -90,6 +91,7 @@ def get_variables_from_detail_api(server,dataset_key,API_key):
 
 def make_plot(data,dataset_key1,title,**kwargs):
     fig = plt.figure(figsize=(15,5))
+    ax1 = fig.add_subplot(111)
     try:
         data_time = data['time.year']
     except:
@@ -112,46 +114,51 @@ def make_plot(data,dataset_key1,title,**kwargs):
         if 'trend' in kwargs:
             z = numpy.polyfit(data_time, data, 1)
             p = np.poly1d(z)
-            plt.plot(data_time,p(data_time),"r--",c='green')
+            ax1.plot(data_time,p(data_time),"r--",c='#1B9AA0')
             
-        plt.plot(data_time,data, '*-',linewidth = 1,c='blue',label = dataset_key1) 
+        ax1.plot(data_time,data, '*-',linewidth = 1,c='#0030A0',label = dataset_key1) 
     else:
-        plt.plot(data, '*-',linewidth = 1,c='blue',label = dataset_key1) 
+        ax1.plot(data, '*-',linewidth = 1,c='#0030A0',label = dataset_key1) 
 
     #plt.plot(data, '*-',linewidth = 1,c='blue',label = dataset_key1) 
     #plt.xlabel('Time')
-    plt.title(title)
-    plt.grid()
+    ttl = plt.title(title,fontweight = 'bold')
+    ttl.set_position([.5, 1.05])
+    plt.grid(color='#C3C8CE',alpha=1)
     ml = MultipleLocator(1)
     bl = MultipleLocator(5)
-    plt.axes().xaxis.set_minor_locator(ml)
-    plt.axes().xaxis.set_major_locator(bl)
-
+    ax1.xaxis.set_minor_locator(ml)
+    ax1.xaxis.set_major_locator(bl)
+    
+    ax1.spines['bottom'].set_color('#C3C8CE')
+    ax1.spines['top'].set_color('#C3C8CE')
+    ax1.spines['left'].set_color('#C3C8CE')
+    ax1.spines['right'].set_color('#C3C8CE')
     #plt.minorticks_on()
     if len(kwargs) > 0:
         if 'dataset_key2' and 'data2' in kwargs:
-            plt.plot(kwargs['data2'], '*-',linewidth = 1,c='red',label = kwargs['dataset_key2']) 
+            ax1.plot(kwargs['data2'], '*-',linewidth = 1,c='#EC5840',label = kwargs['dataset_key2']) 
             plt.legend()
         if 'ylabel' in kwargs:
             plt.ylabel(kwargs['ylabel'])
         if 'xlabel' in kwargs:
             plt.ylabel(kwargs['xlabel'])
         if 'compare_line' in kwargs:
-            plt.plot([np.min(data_time).values-2,np.max(data_time).values+2],[kwargs['compare_line'],kwargs['compare_line']],':',c='red',linewidth=1.5)
+            ax1.plot([np.min(data_time).values-2,np.max(data_time).values+2],[kwargs['compare_line'],kwargs['compare_line']],':',c='#EC5840',linewidth=1.5)
     fig.autofmt_xdate()
     plt.xticks(rotation = 0)
 
     plt.xlim(np.min(data_time)-0.5,np.max(data_time)+0.5)
     plt.savefig('plot_out' + title + '.png', dpi=300)
     plt.show()
-    plt.close()
+ 
 def running_mean(x, N):
     cumsum = numpy.cumsum(numpy.insert(x, 0, 0)) 
     return (cumsum[N:] - cumsum[:-N]) / N 
 
 def make_histogram(data,bins):
     fig, ax = plt.subplots()
-    plt.hist(data,bins=bins,rwidth = 0.98)
+    ax.hist(data,bins=bins,rwidth = 0.98,color='#0030A0')
     plt.xscale('log')
     ax.set_xticks(bins)
     ax.xaxis.set_major_formatter(ScalarFormatter())
