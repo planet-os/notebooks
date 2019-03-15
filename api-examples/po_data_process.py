@@ -9,9 +9,12 @@ import matplotlib.gridspec as gridspec
 import datetime
 import numpy as np
 import matplotlib as mpl
+import matplotlib.dates as mdates
+from matplotlib.dates import MonthLocator, DayLocator, YearLocator
 from matplotlib.ticker import MultipleLocator
+import matplotlib as mpl
 mpl.rcParams['font.family'] = 'Avenir Lt Std'
-mpl.rcParams['font.size'] = 16
+mpl.rcParams.update({'font.size': 20})
 
 server = "http://api.planetos.com/v1/datasets/"
 
@@ -251,3 +254,37 @@ def make_anomalies_plot(data,threshold,title,**kwargs):
     title = title.replace('.','_')
     #plt.savefig('anomaly_out_' + title +'.png',dpi=300)
     plt.show() 
+
+def compare_observations_analysis_mean(time_obs,data_obs,label_obs,analysis_mean,analysis_label,plot_title,fig_name):
+    fig = plt.figure(figsize=(20, 14))
+    ax1 = fig.add_subplot(111)
+    
+    plt.grid(color='#C3C8CE',alpha=1)
+    
+    ax1.plot(time_obs, data_obs, '*-', c='#EC5840',label = label_obs)
+    
+    props = dict(boxstyle='round', facecolor='#1B9AA0',edgecolor='#1B9AA0')
+    ax1.text(max(time_obs) + datetime.timedelta(days=1.5),analysis_mean,str("%.1f" % analysis_mean),verticalalignment='center',bbox = props,color='white')
+
+    ax1.plot([min(time_obs) - datetime.timedelta(days=1),max(time_obs) + datetime.timedelta(days=1)], [analysis_mean,analysis_mean], '-',linewidth = 2, c='#1B9AA0', label = analysis_label)
+    ax1.set_xlim(min(time_obs) - datetime.timedelta(days=1),max(time_obs) + datetime.timedelta(days=1))
+        
+    plt.xticks(rotation=0)
+    
+    
+    frmt = mdates.DateFormatter('%d %b %Y')
+    ax1.xaxis.set_major_formatter(frmt)
+    ax1.xaxis.set_major_locator(DayLocator(interval=10))
+    ax1.xaxis.set_minor_locator(DayLocator(interval=1))
+    ax1.spines['bottom'].set_color('#C3C8CE')
+    ax1.spines['top'].set_color('#C3C8CE')
+    ax1.spines['left'].set_color('#C3C8CE')
+    ax1.spines['right'].set_color('#C3C8CE')
+    plt.ylabel('Temperature [C]',labelpad=40)
+    plt.legend(loc=9, bbox_to_anchor=(0.5, -0.06), ncol=2,frameon=False)
+    
+    ttl = plt.title(plot_title,fontsize=30,fontweight = 'bold')
+    ttl.set_position([.5, 1.05])
+    
+    plt.savefig(fig_name)
+    plt.show()
