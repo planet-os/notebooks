@@ -42,8 +42,8 @@ def Test_ipynb(filename):
 folder = os.path.dirname(os.path.realpath(__file__)) + '/../'#'/Users/etoodu/desktop/planetOS/git/notebooks/api-examples/'
 
 done = []
-ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb','CHIRPS_example.ipynb',
-          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','ARC2_CHIRPS_example.py.ipynb'] #ignore arc2 chirps as package api is so slow right now
+ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb',
+          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb'] 
 
 notebooks = _listdir_ipynb(folder)
 for file in notebooks:
