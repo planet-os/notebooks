@@ -43,7 +43,7 @@ folder = os.path.dirname(os.path.realpath(__file__)) + '/../'#'/Users/etoodu/des
 
 done = []
 ignore = ['GFS_public_full_demo_main.ipynb','ndbc-spectral-wave-density-data-validation.ipynb',
-          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb','era5-s3-via-boto.ipynb'] #ignore arc2 chirps as package api is so slow right now
+          'Metno_wind_demo.ipynb','CFSv2_usage_example.ipynb'] 
 
 notebooks = _listdir_ipynb(folder)
 for file in notebooks:
