@@ -1,6 +1,7 @@
 appnope==0.1.0
 backports.shutil-get-terminal-size==1.0.0
-basemap==1.0.7
+#basemap==1.0.7
+https://github.com/matplotlib/basemap/archive/master.zip
 branca==0.1.1
 click==6.6
 click-plugins==1.0.3
