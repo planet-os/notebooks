@@ -66,6 +66,7 @@ class package_api:
         if mp.status_code == 200:
             return
         else:
+            print (mp.content)
             raise ValueError("Package submittion failed")
 
     def get_package_exists(self):
@@ -82,6 +83,7 @@ class package_api:
                 print("Package started")
                 return_status = True
             else:
+                print (rjson)
                 raise ValueError("Unknown package status, exit")
         return return_status
 
@@ -92,6 +94,7 @@ class package_api:
             if rjson['packageResult']['success'] == True:
                 return_status = 'ready'
             else:
+                print (rjson)
                 return_status = 'failure'
         else:
             return_status = 'not_ready'
