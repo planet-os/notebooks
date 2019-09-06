@@ -60,7 +60,10 @@ def get_units(dataset_key, variable,API_key):
     query = server +'{0}/variables?apikey={1}&variables={2}'.format(dataset_key,API_key,variable)
     json = read_data_to_json(query)['variables']
     attributes = [u['attributes'] for u in json][0]
-    uns = [v['attributeValue'] for v in attributes if v['attributeKey'] == 'units'][0]
+    try:
+        uns = [v['attributeValue'] for v in attributes if v['attributeKey'] == 'units'][0]
+    except:
+        uns = [u['unit'] for u in json][0]
     return uns
 
 def get_data_from_point_API(dataset_key, longitude, latitude, API_key,**kwargs):
