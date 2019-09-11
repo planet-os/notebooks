@@ -10,8 +10,9 @@ import datetime
 import shutil
 
 
+
 class package_api:
-    def __init__(self, dh, dataset, variable_name, longitude_west, longitude_east, latitude_south, latitude_north, time_start=None, time_end=None, area_name="", folder='./', z='all'):
+    def __init__(self, dh, dataset, variable_name, longitude_west, longitude_east, latitude_south, latitude_north, time_start=None, time_end=None,reftime_start=None,reftime_end=None, area_name="", folder='./', z='all'):
         self.dh = dh
         self.dataset = dataset
         self.variable_name = variable_name
@@ -24,7 +25,10 @@ class package_api:
             self.temporal_extent = ''
         else:
             self.temporal_extent = (time_start, time_end)
-
+        if not reftime_start == None and not reftime_end == None:
+            self.reftime = (reftime_start,reftime_end)
+        else:
+            self.reftime = ''
         self.variable = variable_name
         self.area_name = area_name
         self.folder = folder
@@ -59,14 +63,16 @@ class package_api:
             kwgs.update({'time_start': self.temporal_extent[0], 'time_end': self.temporal_extent[1]})
         else:
             kwgs.update({'reftime_recent': 'true'})
+        if self.reftime:
+            kwgs.update({'reftime_start':self.reftime[0],'reftime_end':self.reftime[1]})
+            kwgs.update({'reftime_recent': 'false'})
 
         putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
-        #print (putrequest)
+        print (putrequest)
         mp = requests.put(putrequest)
         if mp.status_code == 200:
             return
         else:
-            print (mp.content)
             raise ValueError("Package submittion failed")
 
     def get_package_exists(self):
