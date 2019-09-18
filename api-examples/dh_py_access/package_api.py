@@ -10,7 +10,6 @@ import datetime
 import shutil
 
 
-
 class package_api:
     def __init__(self, dh, dataset, variable_name, longitude_west, longitude_east, latitude_south, latitude_north, time_start=None, time_end=None,reftime_start=None,reftime_end=None, area_name="", folder='./', z='all'):
         self.dh = dh
@@ -39,14 +38,13 @@ class package_api:
             self.variable_name = ','.join(variable_name)
 
 
-    def make_package(self):
+ def make_package(self):
         if self.get_package_exists():
             return
 
         kwgs = {'apikey': self.dh.apikey,
                 'dataset': self.dataset,
                 'package': self.package_key,
-                'var': self.variable_name,
                 'z': self.z_select}
 
         if len(self.coordinates) == 4:
@@ -67,6 +65,9 @@ class package_api:
             kwgs.update({'reftime_start':self.reftime[0],'reftime_end':self.reftime[1]})
             kwgs.update({'reftime_recent': 'false'})
 
+        if not self.variable_name == 'all':
+            kwgs.update({'var': self.variable_name})
+            
         putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
         print (putrequest)
         mp = requests.put(putrequest)
