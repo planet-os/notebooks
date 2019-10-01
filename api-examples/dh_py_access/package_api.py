@@ -38,43 +38,43 @@ class package_api:
             self.variable_name = ','.join(variable_name)
 
 
- def make_package(self):
-        if self.get_package_exists():
-            return
-
-        kwgs = {'apikey': self.dh.apikey,
-                'dataset': self.dataset,
-                'package': self.package_key,
-                'z': self.z_select}
-
-        if len(self.coordinates) == 4:
-            polygon = [[self.coordinates[0], self.coordinates[2]],
-                       [self.coordinates[1], self.coordinates[2]],
-                       [self.coordinates[1], self.coordinates[3]],
-                       [self.coordinates[0], self.coordinates[3]],
-                       [self.coordinates[0], self.coordinates[2]]]
-            kwgs.update({'polygon': polygon})
-        else:
-            kwgs.update({'lon': self.coordinates[0], 'lat': self.coordinates[1]})
-
-        if self.temporal_extent:
-            kwgs.update({'time_start': self.temporal_extent[0], 'time_end': self.temporal_extent[1]})
-        else:
-            kwgs.update({'reftime_recent': 'true'})
-        if self.reftime:
-            kwgs.update({'reftime_start':self.reftime[0],'reftime_end':self.reftime[1]})
-            kwgs.update({'reftime_recent': 'false'})
-
-        if not self.variable_name == 'all':
-            kwgs.update({'var': self.variable_name})
-            
-        putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
-        print (putrequest)
-        mp = requests.put(putrequest)
-        if mp.status_code == 200:
-            return
-        else:
-            raise ValueError("Package submittion failed")
+    def make_package(self):
+       if self.get_package_exists():
+           return
+   
+       kwgs = {'apikey': self.dh.apikey,
+               'dataset': self.dataset,
+               'package': self.package_key,
+               'z': self.z_select}
+   
+       if len(self.coordinates) == 4:
+           polygon = [[self.coordinates[0], self.coordinates[2]],
+                      [self.coordinates[1], self.coordinates[2]],
+                      [self.coordinates[1], self.coordinates[3]],
+                      [self.coordinates[0], self.coordinates[3]],
+                      [self.coordinates[0], self.coordinates[2]]]
+           kwgs.update({'polygon': polygon})
+       else:
+           kwgs.update({'lon': self.coordinates[0], 'lat': self.coordinates[1]})
+   
+       if self.temporal_extent:
+           kwgs.update({'time_start': self.temporal_extent[0], 'time_end': self.temporal_extent[1]})
+       else:
+           kwgs.update({'reftime_recent': 'true'})
+       if self.reftime:
+           kwgs.update({'reftime_start':self.reftime[0],'reftime_end':self.reftime[1]})
+           kwgs.update({'reftime_recent': 'false'})
+   
+       if not self.variable_name == 'all':
+           kwgs.update({'var': self.variable_name})
+           
+       putrequest = "http://{0}/{1}/packages?".format(self.dh.server, self.dh.version) + urllib.parse.urlencode(kwgs)
+       print (putrequest)
+       mp = requests.put(putrequest)
+       if mp.status_code == 200:
+           return
+       else:
+           raise ValueError("Package submittion failed")
 
     def get_package_exists(self):
         rrr = parse_urls(self.dh.server, self.dh.version, 'packages/' + self.package_key, self.dh.apikey)
