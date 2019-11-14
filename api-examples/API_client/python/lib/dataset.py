@@ -140,24 +140,28 @@ class dataset:
 
         return stdata.r.json()
 
-    def get_station_data_as_pandas(self, station_list, count=2000, variables='temperature', start_delta = 30):
+    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start_delta = 30):
         """
         Get station list as input and return properly formatted dataframe
         Columns, station ID/var
         """
-
+        def l1(ind):
+            return [ind[j] for j in variables]
         variables = [variables,] if type(variables) == str else variables
         tempdata = {}
         for i in station_list:
-            tempdata[i] = []
             dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = (datetime.datetime.today() - datetime.timedelta(days=start_delta)).strftime("%Y-%m-%dT00:00:00"))
-            #print(len(dd['entries']),'station', i)
-
-            for tval in dd['entries']:
-                for vv in variables:
-                    if vv in tval['data']:
-                        tempdata[i].append((parse(tval['axes']['time']),tval['data'][vv]))
-
+            try: #it tend to fail at fist try, in some reason. quick hack with try and except.
+                ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
+            except:
+                ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
+#            print(len(dd['entries']))
+            tempdata[i] = pd.DataFrame(list(ab[1]),
+                                       index=pd.to_datetime(ab[0]),
+                                       columns=variables)
+            # for tval in dd['entries']:
+            #     for vv in variables:
+            #         tempdata[i][vv].append((parse(tval['axes']['time']),tval['data'][vv]))
         return tempdata
 
     def get_subdatasets(self):
