@@ -74,7 +74,16 @@ class variable:
                                    ## 'lon':selected_lon,'lat':selected_lat,
                                    ## 'count':selected_count})
                                 
+                                
+    def get_values_analysis(self, location="Võru", reftime=None, reftime_end=None, count=10, debug=False):
+        kwags = {}
+        kwags['lon'] = locations[location][0]
+        kwags['lat'] = locations[location][1]
+        kwags['count'] = count
+        kwags['vars'] = self.varname
 
+        self.values[location] = self.ds.get_json_data_in_pandas(debug=debug, **kwags)
+        
 class variables:
     def __init__(self, input_variables, scope, ds, debug=False):
         for i in input_variables:
