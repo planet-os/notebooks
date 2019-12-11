@@ -140,7 +140,7 @@ class dataset:
 
         return stdata.r.json()
 
-    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start_delta = 30):
+    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start=(datetime.datetime.today() - datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00")):
         """
         Get station list as input and return properly formatted dataframe
         Columns, station ID/var
@@ -150,15 +150,16 @@ class dataset:
         variables = [variables,] if type(variables) == str else variables
         tempdata = {}
         for i in station_list:
-            dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = (datetime.datetime.today() - datetime.timedelta(days=start_delta)).strftime("%Y-%m-%dT00:00:00"))
+            dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = start)
             try: #it tend to fail at fist try, in some reason. quick hack with try and except.
                 ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
             except:
                 ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
 #            print(len(dd['entries']))
-            tempdata[i] = pd.DataFrame(list(ab[1]),
-                                       index=pd.to_datetime(ab[0]),
-                                       columns=variables)
+            if ab:
+                tempdata[i] = pd.DataFrame(list(ab[1]),
+                                           index=pd.to_datetime(ab[0]),
+                                           columns=variables)
             # for tval in dd['entries']:
             #     for vv in variables:
             #         tempdata[i][vv].append((parse(tval['axes']['time']),tval['data'][vv]))
@@ -180,3 +181,15 @@ class dataset:
                            sorted(set(itertools.chain.from_iterable(
                                   [[i['temporalCoverage']['start'],
                                     i['temporalCoverage']['end']] for i in subdatasets])))))
+
+    def get_dataset_boundaries(self):
+        boundaries=parse_urls(self.datahub.server,self.datahub.version,"datasets/"+self.datasetkey,self.datahub.apikey)
+        rj = boundaries.r.json()['SpatialExtent']
+        if rj['type'] == 'Polygon':
+            rdict = rj['coordinates'][0]
+        elif rj['type'] == 'MultiPolygon':
+            rdict = rj['coordinates'][0][0]
+        else:
+            rdict = rj
+        return rdict
+
