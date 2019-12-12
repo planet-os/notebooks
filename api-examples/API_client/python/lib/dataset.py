@@ -142,7 +142,7 @@ class dataset:
 
     def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start=(datetime.datetime.today() - datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),end=None):
         if end == None:
-            end = (datetime.datetime.strptime(start,"%Y-%m-%dT00:00:00") + datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00")
+            end = (datetime.datetime.strptime(start,"%Y-%m-%dT%H:%M:%S") + datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00")
         """
         Get station list as input and return properly formatted dataframe
         Columns, station ID/var
