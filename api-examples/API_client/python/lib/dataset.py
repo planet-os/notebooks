@@ -140,7 +140,9 @@ class dataset:
 
         return stdata.r.json()
 
-    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start=(datetime.datetime.today() - datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00")):
+    def get_station_data_as_pandas(self, station_list, count=1000, variables='temperature', start=(datetime.datetime.today() - datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00"),end=None):
+        if end == None:
+            end = (datetime.datetime.strptime(start,"%Y-%m-%dT00:00:00") + datetime.timedelta(days=30)).strftime("%Y-%m-%dT00:00:00")
         """
         Get station list as input and return properly formatted dataframe
         Columns, station ID/var
@@ -151,9 +153,10 @@ class dataset:
         tempdata = {}
         for i in station_list:
             dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = start)
-            try: #it tend to fail at fist try, in some reason. quick hack with try and except.
+            if 'entries' in dd:
                 ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
-            except:
+            else:
+                dd = self.get_station_data(count=count, stations=i, variables=",".join(variables), start = start)
                 ab = list(zip(*[[i['axes']['time'], l1(i['data'])] for i in dd['entries']]))
 #            print(len(dd['entries']))
             if ab:
