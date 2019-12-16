@@ -1,5 +1,17 @@
 # ERA5 Data on S3 via AWS Public Dataset Program
 
+## List of changes
+
+| version | Change                 | description                                                                                                           |
+|:--------|:-----------------------|:----------------------------------------------------------------------------------------------------------------------|
+| v2      | start year 1979        | change start year from 2008, as it was previously, to 1979                                                            |
+| v2      | CDS API                | Change data download source from ECMWF API to CDS API                                                                 |
+| v2      | resolution 0.25 degree | Data resolution change caused by resolution change in distribution source                                             |
+| v2      | Analysis vs forecast   | In v1, all the variables where forecast variables. In v2, they can be either, but not from both for the same variable |
+| v2      | Data start time        | In v1, all the files started on the hour 7 of a day, in v2, it is 00                                                  |
+|         |                        |                                                                                                                       |
+
+
 To provide cloud-based access to ERA5 reanalysis data, Planet OS is working in conjunction with the [AWS Public Dataset Program](https://aws.amazon.com/opendata/public-datasets/) to publish and maintain regular updates of ERA5 data in S3.
 
 This documentation outlines the dataset's details, available parameters, location and structure on S3, and includes examples of how to access and work with the data.
@@ -12,9 +24,10 @@ ERA5 Climate reanalysis provides a numerical assessment of the modern climate. I
 
 The dataset provides all essential atmospheric meteorological parameters like, but not limited to, air temperature, pressure and wind at different altitudes, along with surface parameters like rainfall, soil moisture content and sea parameters like sea-surface temperature and wave height. ERA5 provides data at a considerably higher spatial and temporal resolution than its legacy counterpart ERA-Interim. ERA5 consists of high resolution version with 31 km horizontal resolution, and a reduced resolution ensemble version with 10 members.
 
-Data is currently available since 2008, but will be continuously extended backwards, first until 1979 and then to 1950.
+Data is currently available since 1979, and is currently updated each month. As ERA5 has released a frequent update version ERA5T as well, we will soon move to daily updates.
 
 ## Overview
+
 
 <table>
   <tr>
@@ -53,6 +66,8 @@ Data is currently available since 2008, but will be continuously extended backwa
 ## Variables
 
 The table below lists the 18 ERA5 variables that are available on S3. All variables are surface or single level parameters sourced from the HRES sub-daily forecast stream.
+
+TODO: we should probably explain the derivation of variable names, which is different from what ECMWF does and also is not 100% CDM model, see https://intertrusttechnologies.atlassian.net/wiki/spaces/DDD/pages/264339675/ERA5+original+data
 
 <table>
   <tr>
@@ -133,7 +148,9 @@ The table below lists the 18 ERA5 variables that are available on S3. All variab
   </tr>
 </table>
 
-The date and time of the variable data is the valid time, with a mapping from forecast time to valid time corresponding to that outlined in [Table 0 of the ECMWF ERA5 documentation.](https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation#ERA5datadocumentation-Dataorganisationandaccess) In this mapping, the first 12 forecast hours are used from each forecast run, which occur at 06:00 and 18:00 UTC. A sample highlighting key times of this mapping is included below for reference.
+The date and time of the variable data is the valid time, with a mapping from forecast time to valid time corresponding to that outlined in [Table 0 of the ECMWF ERA5 documentation.](https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation#ERA5datadocumentation-Dataorganisationandaccess) 
+ERA5 can have two different versions of a some variables -- either analysis or forecast. Analysis is a field, where observations of the same timestep are mixed into the data. This differs from forecast, which is just a model calculation. For example, variables like 2m temperature and surface pressure are analysed at each timestep, because there are enough near surface observations available. An example of forecast, on the other hand, is precipitation. Full model analysis cycle is performed every 12 hours, at 06:00 and 18:00 UTC, respectively.
+For forecasted fields, the first 12 forecast hours are used from each forecast run, which occur at 06:00 and 18:00 UTC. A sample highlighting key times of this mapping is included below for reference.
 
 <table>
   <tr>
