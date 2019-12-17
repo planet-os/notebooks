@@ -2,16 +2,6 @@
 
 [List of changes](changelog.md)
 
-| version | Change                 | description                                                                                                           |
-|:--------|:-----------------------|:----------------------------------------------------------------------------------------------------------------------|
-| v2      | start year 1979        | change start year from 2008, as it was previously, to 1979                                                            |
-| v2      | CDS API                | Change data download source from ECMWF API to CDS API                                                                 |
-| v2      | resolution 0.25 degree | Data resolution change caused by resolution change in distribution source                                             |
-| v2      | Analysis vs forecast   | In v1, all the variables where forecast variables. In v2, they can be either, but not from both for the same variable |
-| v2      | Data start time        | In v1, all the files started on the hour 7 of a day, in v2, it is 00                                                  |
-|         |                        |                                                                                                                       |
-
-
 To provide cloud-based access to ERA5 reanalysis data, Planet OS is working in conjunction with the [AWS Public Dataset Program](https://aws.amazon.com/opendata/public-datasets/) to publish and maintain regular updates of ERA5 data in S3.
 
 This documentation outlines the dataset's details, available parameters, location and structure on S3, and includes examples of how to access and work with the data.
