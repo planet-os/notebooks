@@ -1,6 +1,6 @@
 # ERA5 Data on S3 via AWS Public Dataset Program
 
-## List of changes
+[List of changes](changelog.md)
 
 | version | Change                 | description                                                                                                           |
 |:--------|:-----------------------|:----------------------------------------------------------------------------------------------------------------------|
