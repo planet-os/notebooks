@@ -1,12 +1,12 @@
 # ERA5 Data on S3 via AWS Public Dataset Program
 
-[List of changes](changelog.md)
-
 To provide cloud-based access to ERA5 reanalysis data, Planet OS is working in conjunction with the [AWS Public Dataset Program](https://aws.amazon.com/opendata/public-datasets/) to publish and maintain regular updates of ERA5 data in S3.
 
 This documentation outlines the dataset's details, available parameters, location and structure on S3, and includes examples of how to access and work with the data.
 
 Please refer to the ECMWF website for the [official ERA5 data documentation.](https://confluence.ecmwf.int/display/CKB/ERA5+data+documentation)
+
+> **For the list of dataset updates and changes, please refer to the [Changelog](changelog.md) file**.
 
 ## Introduction
 
@@ -14,7 +14,7 @@ ERA5 Climate reanalysis provides a numerical assessment of the modern climate. I
 
 The dataset provides all essential atmospheric meteorological parameters like, but not limited to, air temperature, pressure and wind at different altitudes, along with surface parameters like rainfall, soil moisture content and sea parameters like sea-surface temperature and wave height. ERA5 provides data at a considerably higher spatial and temporal resolution than its legacy counterpart ERA-Interim. ERA5 consists of high resolution version with 31 km horizontal resolution, and a reduced resolution ensemble version with 10 members.
 
-Data is currently available since 1979, and is currently updated each month. As ERA5 has released a frequent update version ERA5T as well, we will soon move to daily updates.
+Data is currently available starting 1979 and is updated monthly. As ECMWF is moving towards more frequent data updates, the PlanetOS team will work to match the data refresh with the ECMWF source.
 
 ## Overview
 
