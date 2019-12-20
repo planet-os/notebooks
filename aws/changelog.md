@@ -9,7 +9,7 @@
  - New time range covering 1979 - 2019
  - Data is sourced from CDS API (previously from ECMWF API)
  - New grid resolution – 0.25 degree
- - Both – analysis and forecast variables are now available
+ - Some variables are now from nalysis and some from forecast
    (previously only forecast variables were distributed)
  - Data start time changed to beging at 00 hour (comparing to 07 hour in v1)
 
