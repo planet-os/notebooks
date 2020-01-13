@@ -63,79 +63,98 @@ Variable names are little different from ECMWF has. You can find explanation of 
   <tr>
     <th>Variable Name</th>
     <th>File Name</th>
+	<th>Variable type (fc/an)</th>
   </tr>
   <tr>
     <td>10 metre U wind component</td>
     <td>eastward_wind_at_10_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>10 metre V wind component</td>
     <td>northward_wind_at_10_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>100 metre U wind component</td>
     <td>eastward_wind_at_100_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>100 metre V wind component</td>
     <td>northward_wind_at_100_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metre dew point temperature</td>
     <td>dew_point_temperature_at_2_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metre temperature</td>
     <td>air_temperature_at_2_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metres maximum temperature since previous post-processing</td>
     <td>air_temperature_at_2_metres_1hour_Maximum.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>2 metres minimum temperature since previous post-processing</td>
     <td>air_temperature_at_2_metres_1hour_Minimum.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>Mean sea level pressure</td>
     <td>air_pressure_at_mean_sea_level.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Sea surface temperature</td>
     <td>sea_surface_temperature.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Mean wave period</td>
     <td>sea_surface_wave_mean_period.nc</td>
+	<td></td>
   </tr>
   <tr>
     <td>Mean direction of wind waves</td>
     <td>sea_surface_wind_wave_from_direction.nc</td>
+	<td></td>
   </tr>
   <tr>
     <td>Significant height of combined wind waves and swell</td>
     <td>significant_height_of_wind_and_swell_waves.nc</td>
+	<td></td>
   </tr>
   <tr>
     <td>Snow density</td>
     <td>snow_density.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Snow depth</td>
     <td>lwe_thickness_of_surface_snow_amount.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Surface pressure</td>
     <td>surface_air_pressure.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Surface solar radiation downwards</td>
     <td>integral_wrt_time_of_surface_direct_downwelling_shortwave_flux_in_air_1hour_Accumulation.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>Total precipitation</td>
     <td>precipitation_amount_1hour_Accumulation.nc</td>
-  </tr>
+	<td>fc</td>
+</tr>
 </table>
 
 The date and time of the variable data is the valid time, with a mapping from forecast time to valid time corresponding to that outlined in [Table 0 of the ECMWF ERA5 documentation.](https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation#ERA5datadocumentation-Dataorganisationandaccess) 
