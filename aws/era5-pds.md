@@ -57,7 +57,7 @@ Data is currently available starting 1979 and is updated monthly. As ECMWF is mo
 
 The table below lists the 18 ERA5 variables that are available on S3. All variables are surface or single level parameters sourced from the HRES sub-daily forecast stream.
 
-TODO: we should probably explain the derivation of variable names, which is different from what ECMWF does and also is not 100% CDM model, see https://intertrusttechnologies.atlassian.net/wiki/spaces/DDD/pages/264339675/ERA5+original+data
+Variable names are little different from ECMWF has. You can find explanation of variable names derivation here: https://github.com/planet-os/notebooks/blob/master/aws/variables_name_derivation.md
 
 <table>
   <tr>
@@ -223,8 +223,6 @@ A sample path for air temperature would take the following form:
 ```
 /2008/01/data/air_temperature_at_2_metres.nc
 ```
-
-Note that due to the nature of the ERA5 forecast timing, which is run twice daily at 06:00 and 18:00 UTC, monthly data files begins with data from 07:00 on the first of the month and continue through 06:00 of the following month. This means the first six hours of data for each month are contained in the previous month’s file.
 
 ## Versioning
 
