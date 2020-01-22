@@ -121,8 +121,8 @@ Variable names are little different from ECMWF has. You can find explanation of 
 	<td></td>
   </tr>
   <tr>
-    <td>Mean direction of wind waves</td>
-    <td>sea_surface_wind_wave_from_direction.nc</td>
+    <td>Mean direction of waves</td>
+    <td>sea_surface_wave_from_direction.nc</td>
 	<td></td>
   </tr>
   <tr>
