@@ -6,15 +6,18 @@ This documentation outlines the dataset's details, available parameters, locatio
 
 Please refer to the ECMWF website for the [official ERA5 data documentation.](https://confluence.ecmwf.int/display/CKB/ERA5+data+documentation)
 
+> **For the list of dataset updates and changes, please refer to the [Changelog](changelog.md) file**.
+
 ## Introduction
 
 ERA5 Climate reanalysis provides a numerical assessment of the modern climate. It is produced by a similar process as regular numerical weather forecast, a data assimilation and forecast loop, taking into account most of the available meteorological observations and analyses them with state of the art numerical model, producing a continuous, spatially consistent and homogeneous dataset.
 
 The dataset provides all essential atmospheric meteorological parameters like, but not limited to, air temperature, pressure and wind at different altitudes, along with surface parameters like rainfall, soil moisture content and sea parameters like sea-surface temperature and wave height. ERA5 provides data at a considerably higher spatial and temporal resolution than its legacy counterpart ERA-Interim. ERA5 consists of high resolution version with 31 km horizontal resolution, and a reduced resolution ensemble version with 10 members.
 
-Data is currently available since 2008, but will be continuously extended backwards, first until 1979 and then to 1950.
+Data is currently available starting 1979 and is updated monthly. As ECMWF is moving towards more frequent data updates, the PlanetOS team will work to match the data refresh with the ECMWF source.
 
 ## Overview
+
 
 <table>
   <tr>
@@ -54,86 +57,109 @@ Data is currently available since 2008, but will be continuously extended backwa
 
 The table below lists the 18 ERA5 variables that are available on S3. All variables are surface or single level parameters sourced from the HRES sub-daily forecast stream.
 
+Variable names are little different from ECMWF has. You can find explanation of variable names derivation here: https://github.com/planet-os/notebooks/blob/master/aws/variables_name_derivation.md
+
 <table>
   <tr>
     <th>Variable Name</th>
     <th>File Name</th>
+	<th>Variable type (fc/an)</th>
   </tr>
   <tr>
     <td>10 metre U wind component</td>
     <td>eastward_wind_at_10_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>10 metre V wind component</td>
     <td>northward_wind_at_10_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>100 metre U wind component</td>
     <td>eastward_wind_at_100_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>100 metre V wind component</td>
     <td>northward_wind_at_100_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metre dew point temperature</td>
     <td>dew_point_temperature_at_2_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metre temperature</td>
     <td>air_temperature_at_2_metres.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>2 metres maximum temperature since previous post-processing</td>
     <td>air_temperature_at_2_metres_1hour_Maximum.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>2 metres minimum temperature since previous post-processing</td>
     <td>air_temperature_at_2_metres_1hour_Minimum.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>Mean sea level pressure</td>
     <td>air_pressure_at_mean_sea_level.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Sea surface temperature</td>
     <td>sea_surface_temperature.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Mean wave period</td>
     <td>sea_surface_wave_mean_period.nc</td>
+	<td></td>
   </tr>
   <tr>
-    <td>Mean direction of wind waves</td>
-    <td>sea_surface_wind_wave_from_direction.nc</td>
+    <td>Mean direction of waves</td>
+    <td>sea_surface_wave_from_direction.nc</td>
+	<td></td>
   </tr>
   <tr>
     <td>Significant height of combined wind waves and swell</td>
     <td>significant_height_of_wind_and_swell_waves.nc</td>
+	<td></td>
   </tr>
   <tr>
     <td>Snow density</td>
     <td>snow_density.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Snow depth</td>
     <td>lwe_thickness_of_surface_snow_amount.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Surface pressure</td>
     <td>surface_air_pressure.nc</td>
+	<td>an</td>
   </tr>
   <tr>
     <td>Surface solar radiation downwards</td>
     <td>integral_wrt_time_of_surface_direct_downwelling_shortwave_flux_in_air_1hour_Accumulation.nc</td>
+	<td>fc</td>
   </tr>
   <tr>
     <td>Total precipitation</td>
     <td>precipitation_amount_1hour_Accumulation.nc</td>
-  </tr>
+	<td>fc</td>
+</tr>
 </table>
 
-The date and time of the variable data is the valid time, with a mapping from forecast time to valid time corresponding to that outlined in [Table 0 of the ECMWF ERA5 documentation.](https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation#ERA5datadocumentation-Dataorganisationandaccess) In this mapping, the first 12 forecast hours are used from each forecast run, which occur at 06:00 and 18:00 UTC. A sample highlighting key times of this mapping is included below for reference.
+The date and time of the variable data is the valid time, with a mapping from forecast time to valid time corresponding to that outlined in [Table 0 of the ECMWF ERA5 documentation.](https://software.ecmwf.int/wiki/display/CKB/ERA5+data+documentation#ERA5datadocumentation-Dataorganisationandaccess) 
+ERA5 can have two different versions of a some variables -- either analysis or forecast. Analysis is a field, where observations of the same timestep are mixed into the data. This differs from forecast, which is just a model calculation. For example, variables like 2m temperature and surface pressure are analysed at each timestep, because there are enough near surface observations available. An example of forecast, on the other hand, is precipitation. Full model analysis cycle is performed every 12 hours, at 06:00 and 18:00 UTC, respectively.
+For forecasted fields, the first 12 forecast hours are used from each forecast run, which occur at 06:00 and 18:00 UTC. A sample highlighting key times of this mapping is included below for reference.
 
 <table>
   <tr>
@@ -216,8 +242,6 @@ A sample path for air temperature would take the following form:
 ```
 /2008/01/data/air_temperature_at_2_metres.nc
 ```
-
-Note that due to the nature of the ERA5 forecast timing, which is run twice daily at 06:00 and 18:00 UTC, monthly data files begins with data from 07:00 on the first of the month and continue through 06:00 of the following month. This means the first six hours of data for each month are contained in the previous month’s file.
 
 ## Versioning
 
