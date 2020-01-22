@@ -1,0 +1,6 @@
+# Explanation of variable names derivation
+
+We use standard name according to CF convention, where possible, append vertical coordinate type and aggregation type, where necessary
+This is similar, but not equivalent to what CDM grib to NetCDF conversion, does. First, we omit the vertical coordinate type, where not necessary. For example, CDM uses "Sea_surface_temperature_surface", and we have decided to leave out the last "_surface". Another difference is that CDM uses vertical coordinate in the variable name, when we convert single file, like 100m_U_component_of_wind_speed, but converts the name to something like "U_component_of_wind_height_above_ground", when there is more than one vertical level available (like 10m, 80m, and 100m wind speeds). In order to avoid that kind of confusion, we always start with the standard name and leave the vertical coordinate description in the end.
+Confusing aggregations from variable names are removed, "maximum_2m_temperature_since_previous_post_processing" becomes "air_temperature_at_2_metres_1_hour_maximum".
+Other possible name variants are added to metadata for easier searching and avoiding confusion.
