@@ -2,7 +2,7 @@
 
 ## v2
 
-> TBD
+> January 22, 2020
 
 ### Dimensions & Grid Update. Longer Time Range.
 
@@ -12,6 +12,7 @@
  - Some variables are now from nalysis and some from forecast
    (previously only forecast variables were distributed)
  - Data start time changed to beging at 00 hour (comparing to 07 hour in v1)
+ - Sea surface wind wave direction replaced with more general wave direction
 
 ## v1
 
