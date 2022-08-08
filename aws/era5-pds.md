@@ -1,6 +1,6 @@
 # ERA5 Data on S3 via AWS Public Dataset Program
 
-To provide cloud-based access to ERA5 reanalysis data, Planet OS is working in conjunction with the [AWS Public Dataset Program](https://aws.amazon.com/opendata/public-datasets/) to publish and maintain regular updates of ERA5 data in S3.
+To provide cloud-based access to ERA5 reanalysis data, Intertrust is working in conjunction with the [AWS Public Dataset Program](https://aws.amazon.com/opendata/public-datasets/) to publish and maintain regular updates of ERA5 data in S3.
 
 This documentation outlines the dataset's details, available parameters, location and structure on S3, and includes examples of how to access and work with the data.
 
@@ -14,7 +14,7 @@ ERA5 Climate reanalysis provides a numerical assessment of the modern climate. I
 
 The dataset provides all essential atmospheric meteorological parameters like, but not limited to, air temperature, pressure and wind at different altitudes, along with surface parameters like rainfall, soil moisture content and sea parameters like sea-surface temperature and wave height. ERA5 provides data at a considerably higher spatial and temporal resolution than its legacy counterpart ERA-Interim. ERA5 consists of high resolution version with 31 km horizontal resolution, and a reduced resolution ensemble version with 10 members.
 
-Data is currently available starting 1979 and is updated monthly. As ECMWF is moving towards more frequent data updates, the PlanetOS team will work to match the data refresh with the ECMWF source.
+Data is currently available starting 1979 and is updated monthly. As ECMWF is moving towards more frequent data updates, the Intertrust team will work to match the data refresh with the ECMWF source.
 
 ## Overview
 
@@ -256,8 +256,6 @@ The data is publicly available in the ERA5 S3 bucket (era5-pds) and may be direc
 Data may be accessed via http using the S3 REST API. To make a GET request, use the bucket name and the full key name for the object. For example, to download air temperature at 2 meters for January, 2008, submit a GET request to the following url: [http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc](http://era5-pds.s3.amazonaws.com/2008/01/data/air_temperature_at_2_metres.nc)
 
 Another option is to use the [AWS SDK or CLI.](https://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html) We’ve published a jupyter notebook on GitHub that provides an example of [how to access ERA5 data in python using boto](https://github.com/planet-os/notebooks/blob/master/aws/era5-s3-via-boto.ipynb).
-
-This dataset is also accessible via the [Planet OS Datahub](https://data.planetos.com/datasets/ecmwf_era5), which provides a RESTful API that supports JSON and CSV responses to point and polygon based queries.
 
 ## Use Cases & Examples
 
