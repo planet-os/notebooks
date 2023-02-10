@@ -15,7 +15,7 @@ folium==0.2.1
 geopandas==0.2.1
 gnureadline==6.3.3
 ipykernel==4.3.1
-ipython==4.2.0
+ipython==8.10.0
 ipython-genutils==0.1.0
 ipywidgets==5.0.0
 Jinja2==2.8
